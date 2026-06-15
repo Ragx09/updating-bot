@@ -14,7 +14,7 @@ notion = Client(auth=os.environ["NOTION_TOKEN"])
 
 NOTION_DB   = os.environ["NOTION_DATABASE_ID"]
 USERNAME    = os.environ["GH_USERNAME"]
-MODEL       = "deepseek/deepseek-r1:free"
+MODEL       = "deepseek/deepseek-r1-0528:free"
 EXTENSIONS  = {".py", ".md", ".js", ".ts", ".txt", ".yaml", ".yml", ".json"}
 SKIP_DAYS   = 3    # skip repos active in last N days
 MAX_COMMITS = 3    # cap commits per day
@@ -156,7 +156,10 @@ def run():
         status = "Success"
 
     log(f"\nDone — {committed} commit(s), {len(skipped_names)} repo(s) skipped.")
-    log_to_notion(len(repos), len(skipped_names), committed, commit_details, status)
+    try:
+        log_to_notion(len(repos), len(skipped_names), committed, commit_details, status)
+    except Exception as e:
+        log(f"Notion logging failed (non-fatal): {e}")
 
 if __name__ == "__main__":
     run()

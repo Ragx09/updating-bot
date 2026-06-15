@@ -14,7 +14,7 @@ notion = Client(auth=os.environ["NOTION_TOKEN"])
 
 NOTION_DB = os.environ["NOTION_DATABASE_ID"]
 USERNAME  = os.environ["GH_USERNAME"]
-MODEL     = "deepseek/deepseek-r1:free"
+MODEL     = "deepseek/deepseek-r1-0528:free"
 
 # ── Idea source ───────────────────────────────────────────────────────────────
 
