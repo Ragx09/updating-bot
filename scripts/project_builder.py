@@ -14,7 +14,7 @@ notion = Client(auth=os.environ["NOTION_TOKEN"])
 
 NOTION_DB = os.environ["NOTION_DATABASE_ID"]
 USERNAME  = os.environ["GH_USERNAME"]
-MODEL     = "nex-agi/nex-n2-pro:free"
+MODEL     = "meta-llama/llama-3.3-70b-instruct:free"
 
 # ── Idea source ───────────────────────────────────────────────────────────────
 

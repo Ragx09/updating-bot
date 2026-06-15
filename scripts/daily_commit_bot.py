@@ -14,7 +14,7 @@ notion = Client(auth=os.environ["NOTION_TOKEN"])
 
 NOTION_DB   = os.environ["NOTION_DATABASE_ID"]
 USERNAME    = os.environ["GH_USERNAME"]
-MODEL       = "nex-agi/nex-n2-pro:free"
+MODEL       = "meta-llama/llama-3.3-70b-instruct:free"
 EXTENSIONS  = {".py", ".md", ".js", ".ts", ".txt", ".yaml", ".yml", ".json"}
 SKIP_DAYS   = 3    # skip repos active in last N days
 MAX_COMMITS = 3    # cap commits per day
