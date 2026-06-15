@@ -1,4 +1,4 @@
-import os, random, base64
+import os, random, base64, time
 from datetime import datetime, timezone, timedelta
 from openai import OpenAI
 from github import Github
@@ -60,23 +60,30 @@ def improve_file(repo, file_obj):
     raw = base64.b64decode(file_obj.content).decode("utf-8", errors="replace")
     snippet = raw[:3000]
 
-    response = ai.chat.completions.create(
-        model=MODEL,
-        max_tokens=2000,
-        messages=[{
-            "role": "user",
-            "content": (
-                f"You are improving a file in the repo '{repo.name}'.\n"
-                f"File: {file_obj.path}\n\n"
-                f"Current content (may be truncated):\n```\n{snippet}\n```\n\n"
-                "Make ONE small, meaningful improvement: fix a typo, improve a comment, "
-                "add a missing docstring, update a stale note, or fix minor formatting. "
-                "Return ONLY the full updated file content, no explanation, no markdown fences."
-            )
-        }]
-    )
+    for attempt in range(3):
+        response = ai.chat.completions.create(
+            model=MODEL,
+            max_tokens=2000,
+            messages=[{
+                "role": "user",
+                "content": (
+                    f"You are improving a file in the repo '{repo.name}'.\n"
+                    f"File: {file_obj.path}\n\n"
+                    f"Current content (may be truncated):\n```\n{snippet}\n```\n\n"
+                    "Make ONE small, meaningful improvement: fix a typo, improve a comment, "
+                    "add a missing docstring, update a stale note, or fix minor formatting. "
+                    "Return ONLY the full updated file content, no explanation, no markdown fences."
+                )
+            }]
+        )
+        if response.choices and response.choices[0].message.content:
+            break
+        time.sleep(35)
+    else:
+        log(f"  Skipped {file_obj.path}: no response after retries")
+        return False, None
 
-    new_content = (response.choices[0].message.content or "").strip()
+    new_content = response.choices[0].message.content.strip()
 
     # Safety guard: reject if change is disproportionately large
     if abs(len(new_content) - len(raw)) > len(raw) * 0.4:
@@ -147,6 +154,7 @@ def run():
                     commit_details.append(f"- {repo.name}/{path}")
             except Exception as e:
                 log(f"  Error on {repo.name}: {e}")
+        time.sleep(35)
 
     if committed == 0:
         status = "No Changes"
