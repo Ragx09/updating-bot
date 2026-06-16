@@ -13,18 +13,6 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
-      - run: |
-          python -c "
-          import json, urllib.request
-          req = urllib.request.Request('https://openrouter.ai/api/v1/models')
-          data = json.load(urllib.request.urlopen(req))
-          for m in data['data']:
-              p = m.get('pricing', {})
-              if p.get('prompt') == '0' and p.get('completion') == '0':
-                  print(m['id'])
-          "
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       - run: python scripts/daily_commit_bot.py
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
