@@ -14,7 +14,7 @@ notion = Client(auth=os.environ["NOTION_TOKEN"])
 
 NOTION_DB   = os.environ["NOTION_DATABASE_ID"]
 USERNAME    = os.environ["GH_USERNAME"]
-MODEL       = "qwen/qwen-2.5-72b-instruct:free"
+MODEL       = "deepseek/deepseek-chat-v3-0324:free"
 EXTENSIONS  = {".py", ".md", ".js", ".ts", ".txt", ".yaml", ".yml", ".json"}
 SKIP_DAYS   = 3    # skip repos active in last N days
 MAX_COMMITS = 3    # cap commits per day
